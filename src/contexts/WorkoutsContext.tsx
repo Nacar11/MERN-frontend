@@ -15,6 +15,7 @@ interface WorkoutsState {
 type WorkoutsAction = 
   | { type: 'SET_WORKOUTS'; payload: Workout[] }
   | { type: 'CREATE_WORKOUT'; payload: Workout }
+  | { type: 'DELETE_WORKOUT'; payload: Workout[] }
 
 
 interface WorkoutsContextType extends WorkoutsState {
@@ -33,6 +34,10 @@ export const workoutsReducer = (state: { workouts: any }, action: { type: any; p
       return { 
         workouts: [action.payload, ...state.workouts] 
       }
+    case 'DELETE_WORKOUT': 
+        return {
+          workouts: state.workouts.filter((workout: Workout) => workout._id !== action.payload._id)
+        }
     default:
       return state
   }

@@ -37,7 +37,7 @@
     @apply p-2 mt-2 mb-5 border-gray-300 rounded-md box-border bg-white;
   }
 
-  form button {
+   button {
     @apply bg-red-500 border-0 text-white p-3 rounded-md cursor-pointer;
   }
 
