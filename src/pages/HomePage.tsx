@@ -5,7 +5,7 @@ import { useWorkoutsContext } from "../hooks/useWorkoutsContext"
 import WorkoutDetails from "../components/WorkoutDetails"
 import WorkoutForm from "../components/WorkoutForm"
 
-const Home = () => {
+const HomePage = () => {
   const { workouts, dispatch } = useWorkoutsContext()
 
   useEffect(() => {
@@ -33,4 +33,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default HomePage

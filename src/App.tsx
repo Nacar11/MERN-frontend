@@ -4,10 +4,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/HomePage'
 import Navbar from './components/Navbar'
 import ErrorPage from './pages/ErrorPage'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
 
 
 function App() {
-
   return (
     <div className="App">
       <BrowserRouter>
@@ -15,10 +16,21 @@ function App() {
         <div className="pages">
           <Routes>
             <Route 
-              path="/" 
-              element={<Home />} 
+              path="/"
+              element={<Home />}
             />
-            <Route path="*" element={<ErrorPage />} />
+            <Route 
+              path="/login" 
+              element={<LoginPage />} 
+            />
+            <Route 
+              path="/signup" 
+              element={<SignupPage />} 
+            />
+             <Route 
+              path="/*" 
+              element={<ErrorPage />} 
+            />
           </Routes>
         </div>
       </BrowserRouter>
