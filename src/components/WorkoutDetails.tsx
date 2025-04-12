@@ -1,6 +1,8 @@
 import { useWorkoutsContext } from '../hooks/useWorkoutsContext'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useState } from "react";
+import {formatDistanceToNow} from 'date-fns/formatDistanceToNow'
+
 interface Workout {
   _id: string
   title: string
@@ -43,7 +45,7 @@ const WorkoutDetails = ({ workout }: { workout: Workout }) => {
                 <span className="font-semibold">Load (kg):</span> {workout.load}
               </p>
               <p className="pt-3">
-                {new Date(workout.createdAt).toLocaleString()}
+              <p>{formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}</p>
               </p>
             </div>
           </div>

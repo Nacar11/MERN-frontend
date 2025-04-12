@@ -13,7 +13,7 @@ interface WorkoutsState {
 }
 
 type WorkoutsAction = 
-  | { type: 'SET_WORKOUTS'; payload: Workout[] }
+  | { type: 'SET_WORKOUTS'; payload: Workout[]  }
   | { type: 'CREATE_WORKOUT'; payload: Workout }
   | { type: 'DELETE_WORKOUT'; payload: Workout[] }
 
