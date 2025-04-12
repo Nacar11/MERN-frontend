@@ -1,9 +1,10 @@
-import { createContext, useReducer, ReactNode, Dispatch } from 'react'
+import { createContext, useReducer, ReactNode, Dispatch, useEffect } from 'react'
 
 interface User {
   id: string
   email: string
   name: string
+  token: string
 }
 
 interface AuthState {
@@ -20,7 +21,7 @@ interface AuthContextType extends AuthState {
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  dispatch: () => {}, // dummy function for default
+  dispatch: () => {}, 
 })
 
 export const authReducer = (state: AuthState, action: AuthAction): AuthState => {
@@ -41,6 +42,13 @@ interface AuthContextProviderProps {
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, { user: null })
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+    if (user) {
+      dispatch({ type: 'LOGIN', payload: user })
+    }
+  }, [])
   console.log('AuthContext state:', state)
 
   return (
