@@ -11,26 +11,25 @@ interface Workout {
   createdAt: string
 }
 const WorkoutDetails = ({ workout }: { workout: Workout }) => {
-  const { dispatch } = useWorkoutsContext()
   const { user } = useAuthContext()
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleDelete  = async () => {
-    if (!user) {
-      return
-    }
+  // const handleDelete  = async () => {
+  //   if (!user) {
+  //     return
+  //   }
 
-    const response = await fetch('/api/workouts/' + workout._id, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${user.token}`
-      }
-    })
-    const json = await response.json()
+  //   const response = await fetch('/api/workouts/' + workout._id, {
+  //     method: 'DELETE',
+  //     headers: {
+  //       'Authorization': `Bearer ${user.token}`
+  //     }
+  //   })
+  //   const json = await response.json()
 
-    if (response.ok) {
-      dispatch({type: 'DELETE_WORKOUT', payload: json})
-    }
-  }
+  //   if (response.ok) {
+  //     dispatch({type: 'DELETE_WORKOUT', payload: json})
+  //   }
+  // }
 
   return (
     <div className="m-4 bg-white rounded-lg shadow-md p-6 max-w-4xl">
@@ -44,9 +43,7 @@ const WorkoutDetails = ({ workout }: { workout: Workout }) => {
               <p>
                 <span className="font-semibold">Load (kg):</span> {workout.load}
               </p>
-              <p className="pt-3">
               <p>{formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}</p>
-              </p>
             </div>
           </div>
           <div>
@@ -63,7 +60,7 @@ const WorkoutDetails = ({ workout }: { workout: Workout }) => {
             </p>
           <div className="flex justify-center gap-4 mt-4">
           <button
-            onClick={handleDelete}
+            
             className="bg-red-500 text-white px-4 py-2 rounded"
           >
             Yes, Delete

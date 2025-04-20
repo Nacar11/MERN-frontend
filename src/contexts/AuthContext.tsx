@@ -1,11 +1,6 @@
 import { createContext, useReducer, ReactNode, Dispatch, useEffect } from 'react'
+import { User } from '../api/types'
 
-interface User {
-  id: string
-  email: string
-  name: string
-  token: string
-}
 
 interface AuthState {
   user: User | null
