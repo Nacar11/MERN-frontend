@@ -1,8 +1,8 @@
 import { useState } from "react";
 import {formatDistanceToNow} from 'date-fns/formatDistanceToNow'
-import { useDeleteWorkout } from '../react-query/QueriesAndMutations.tsx'
-import { Workout } from "../api/types";
-import Loader from "../components/shared/Loader.tsx";
+import { useDeleteWorkout } from '../../react-query/QueriesAndMutations.tsx'
+import { Workout } from "../../api/types.ts";
+import Loader from "../shared/Loader.tsx";
 
 
 

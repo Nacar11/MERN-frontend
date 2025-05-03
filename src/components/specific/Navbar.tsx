@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom"
-import { useAuthContext } from "../hooks/useAuthContext"
-import { useLogout } from '../hooks/useLogout'
+import { useAuthContext } from "../../hooks/useAuthContext"
+import { useLogout } from '../../hooks/useLogout'
+import UserDropdown from "./UserDropdown"
 
 
 const Navbar = () => {
@@ -74,7 +75,20 @@ const Navbar = () => {
               )}
             </nav>  
             {user && (
-              <div className="flex items-center space-x-4 ml-auto">
+              <UserDropdown/>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export default Navbar
+
+
+
+{/* <div className="flex items-center space-x-4 ml-auto">
                 <NavLink to="/profile" className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg shadow hover:bg-gray-200">
                   <img
                     src="/assets/user.jpg"
@@ -91,13 +105,4 @@ const Navbar = () => {
                 >
                   Logout
                 </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-export default Navbar
+              </div> */}

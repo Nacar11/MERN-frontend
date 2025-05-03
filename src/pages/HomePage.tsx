@@ -1,6 +1,6 @@
 import { useGetWorkouts } from "../react-query/QueriesAndMutations.tsx"
-import WorkoutDetails from "../components/WorkoutDetails"
-import WorkoutForm from "../components/WorkoutForm"
+import WorkoutDetails from "../components/specific/WorkoutDetails.tsx"
+import WorkoutForm from "../components/specific/WorkoutForm.tsx"
 import { Workout } from '../api/types';
 import Loader from "../components/shared/Loader.tsx";
 

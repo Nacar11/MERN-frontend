@@ -3,7 +3,7 @@ import { useAuthContext } from './hooks/useAuthContext'
 
 // pages & components
 import HomePage from './pages/HomePage'
-import Navbar from './components/Navbar'
+import Navbar from './components/specific/Navbar'
 import ErrorPage from './pages/ErrorPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'

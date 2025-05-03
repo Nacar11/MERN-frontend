@@ -1,4 +1,3 @@
-import { FormEvent, useState } from "react"
 import { useSignup } from "../hooks/useSignup"
 import { NavLink } from "react-router-dom"
 import { SignUpValidation } from "../validation/index.tsx"
