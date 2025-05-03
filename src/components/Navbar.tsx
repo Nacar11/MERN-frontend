@@ -11,17 +11,15 @@ const Navbar = () => {
   const handleLogout = () => {
     logout()
   }
-
   return (
     <header className="w-full px-8 text-gray-700 bg-white shadow-sm">
       <div className="container flex flex-col md:flex-row items-center justify-between py-5 mx-auto max-w-7xl">
         <div className="flex items-center w-full justify-between">
-          {/* Logo */}
-          <NavLink to="/" className="flex items-center mb-5 md:mb-0">
-            <span className="text-green-600 text-xl font-black select-none">
+          <NavLink to="/" className="flex items-center md:mb-0">
+            <span className="text-green-600 text-xl font-black select-none md:text-2xl">
               Social
             </span>
-            <span className="text-xl font-black text-gray-900 select-none">
+            <span className="text-xl font-black text-gray-900 select-none md:text-2xl">
               React
             </span>
           </NavLink>
@@ -54,6 +52,9 @@ const Navbar = () => {
                   >
                     About
                   </NavLink>
+                  <a className="mr-5 font-medium text-gray-600 hover:text-gray-900 cursor-pointer">
+                    Create Post 
+                  </a>
                 </>
               ) : (
                 <>
@@ -78,7 +79,7 @@ const Navbar = () => {
                   <img
                     src="/assets/user.jpg"
                     alt="Profile"
-                    className="w-8 h-8 rounded-full"
+                    className="w-6 h-6 rounded-full"
                   />
                   <span className="text-sm font-medium text-gray-800">
                     {user.name || "Profile"}
