@@ -31,8 +31,8 @@ const LoginPage = () => {
     <>
       {isLoading && <LoadingModal open={isLoading} />}
 
-      <div className="flex items-center justify-center bg-gray-100">
-        <div className="relative flex flex-col space-y-8 bg-white shadow-2xl rounded-2xl md:space-y-0">
+      <div className="flex items-center justify-center md:bg-gray-100">
+        <div className="relative flex flex-col space-y-8 bg-white md:shadow-2xl rounded-2xl md:space-y-0">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col justify-center p-8 md:p-14">
               <span className="mb-3 text-3xl font-bold">

@@ -1,7 +1,7 @@
-import { useGetWorkouts } from "../react-query/QueriesAndMutations.tsx"
-import WorkoutDetails from "../components/specific/WorkoutDetails.tsx"
-import WorkoutForm from "../components/specific/WorkoutForm.tsx"
-import { Workout } from '../api/types';
+import { useGetWorkouts } from "../react-query/QueriesAndMutations.tsx";
+import WorkoutDetails from "../components/specific/WorkoutDetails.tsx";
+import WorkoutForm from "../components/specific/WorkoutForm.tsx";
+import { Workout } from "../api/types";
 import Loader from "../components/shared/Loader.tsx";
 
 const HomePage = () => {
@@ -9,24 +9,24 @@ const HomePage = () => {
 
   return (
     <>
-    {isLoading && (
-      <div className="flex justify-center items-center h-60">
-        <Loader />
-      </div>
-    )}
-    {isError ? (
-      <div className="flex justify-center items-center w-full">
-        <code>Something went wrong fetching workouts.</code>
-      </div>
-    ) : (
-      <div className="flex justify-center items-center w-full">
-        <div className="w-full max-w-4xl">
-          {workouts?.map((workout: Workout) => (
-            <WorkoutDetails workout={workout} key={workout._id} />
-          ))}
+      {isLoading && (
+        <div className="flex justify-center items-center h-60">
+          <Loader />
         </div>
-      </div>
-    )}
+      )}
+      {isError ? (
+        <div className="flex justify-center items-center w-full">
+          <code>Something went wrong fetching workouts.</code>
+        </div>
+      ) : (
+        <div className="flex justify-center items-center w-full">
+          <div className="w-full max-w-4xl">
+            {workouts?.map((workout: Workout) => (
+              <WorkoutDetails workout={workout} key={workout._id} />
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };

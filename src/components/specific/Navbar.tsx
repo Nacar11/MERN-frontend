@@ -1,108 +1,147 @@
-import { NavLink } from "react-router-dom"
-import { useAuthContext } from "../../hooks/useAuthContext"
-import { useLogout } from '../../hooks/useLogout'
-import UserDropdown from "./UserDropdown"
-
+import { NavLink } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { useLogout } from "../../hooks/useLogout";
+import UserDropdown from "./UserDropdown";
+import { useState } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Navbar = () => {
-  const { user } = useAuthContext()
+  const { user } = useAuthContext();
+  const { logout } = useLogout();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const { logout } = useLogout()
+  const handleLogout = () => logout();
 
-  const handleLogout = () => {
-    logout()
-  }
   return (
-    <header className="w-full px-8 text-gray-700 bg-white shadow-sm">
-      <div className="container flex flex-col md:flex-row items-center justify-between py-5 mx-auto max-w-7xl">
-        <div className="flex items-center w-full justify-between">
-          <NavLink to="/" className="flex items-center md:mb-0">
-            <span className="text-green-600 text-xl font-black select-none md:text-2xl">
-              Social
-            </span>
-            <span className="text-xl font-black text-gray-900 select-none md:text-2xl">
-              React
-            </span>
-          </NavLink>
-  
-          {/* Navigation and profile */}
-          <div className="flex items-center justify-between w-full ml-8">
-            <nav
-              className={`flex flex-wrap items-center ${
-                user ? "md:border-l md:pl-8" : "ml-auto"
-              }`}
-            >
-              {user ? (
-                <>
-                  <NavLink
-                    to="/"
-                    end
-                    className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-                  >
-                    Home
-                  </NavLink>
-                  <NavLink
-                    to="/workouts"
-                    className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-                  >
-                    Workout
-                  </NavLink>
-                  <NavLink
-                    to="/about"
-                    className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-                  >
-                    About
-                  </NavLink>
-                  <a className="mr-5 font-medium text-gray-600 hover:text-gray-900 cursor-pointer">
-                    Create Post 
-                  </a>
-                </>
-              ) : (
-                <>
-                  <NavLink
-                    to="/login"
-                    className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-                  >
-                    Login
-                  </NavLink>
-                  <NavLink
-                    to="/signup"
-                    className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-                  >
-                    Signup
-                  </NavLink>
-                </>
-              )}
-            </nav>  
-            {user && (
-              <UserDropdown/>
+    <header className="w-full px-4 text-gray-700 bg-white shadow-sm">
+      <div className="flex items-center justify-between py-4 max-w-7xl mx-auto">
+        {/* Logo */}
+        <NavLink to="/" className="flex items-center">
+          <span className="text-green-600 text-xl font-black select-none md:text-2xl">
+            Social
+          </span>
+          <span className="text-xl font-black text-gray-900 select-none md:text-2xl">
+            React
+          </span>
+        </NavLink>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex space-x-6 items-center">
+          {user ? (
+            <>
+              <NavLink
+                to="/"
+                end
+                className="font-medium text-gray-600 hover:text-gray-900"
+              >
+                Home
+              </NavLink>
+              <NavLink
+                to="/workouts"
+                className="font-medium text-gray-600 hover:text-gray-900"
+              >
+                Workout
+              </NavLink>
+              <NavLink
+                to="/about"
+                className="font-medium text-gray-600 hover:text-gray-900"
+              >
+                About
+              </NavLink>
+              <span className="font-medium text-gray-600 hover:text-gray-900 cursor-pointer">
+                Create Post
+              </span>
+              <UserDropdown />
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className="font-medium text-gray-600 hover:text-gray-900"
+              >
+                Login
+              </NavLink>
+              <NavLink
+                to="/signup"
+                className="font-medium text-gray-600 hover:text-gray-900"
+              >
+                Signup
+              </NavLink>
+            </>
+          )}
+        </nav>
+
+        {/* Hamburger Icon (Mobile) */}
+        <button
+          className="md:hidden focus:outline-none bg-green-900"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
+        </button>
+      </div>
+
+      {/* Mobile Sidebar */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden sticky top-0 z-[1] flex w-full flex-wrap items-center justify-between border-b border-gray-100 bg-background py-[2em] uppercase text-text-primary backdrop-blur-[100px]"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          <div className="flex flex-col gap-y-4 items-center basis-full mt-4">
+            {user ? (
+              <>
+                <NavLink
+                  className="hover:text-gray-700"
+                  to="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Home
+                </NavLink>
+                <NavLink
+                  className="hover:text-gray-700"
+                  to="/workouts"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Workout
+                </NavLink>
+                <NavLink
+                  className="hover:text-gray-700"
+                  to="/about"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  About
+                </NavLink>
+                <span
+                  className="hover:text-gray-700 cursor-pointer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Create Post
+                </span>
+                <span
+                  className="hover:text-gray-700 cursor-pointer"
+                  onClick={() => handleLogout()}
+                >
+                  Logout
+                </span>
+              </>
+            ) : (
+              <>
+                <NavLink to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/signup"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Signup
+                </NavLink>
+              </>
             )}
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
-}
+};
 
-export default Navbar
-
-
-
-{/* <div className="flex items-center space-x-4 ml-auto">
-                <NavLink to="/profile" className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg shadow hover:bg-gray-200">
-                  <img
-                    src="/assets/user.jpg"
-                    alt="Profile"
-                    className="w-6 h-6 rounded-full"
-                  />
-                  <span className="text-sm font-medium text-gray-800">
-                    {user.name || "Profile"}
-                  </span>
-                </NavLink>
-                <button
-                  onClick={handleLogout}
-                  className="text-sm font-medium"
-                >
-                  Logout
-                </button>
-              </div> */}
+export default Navbar;

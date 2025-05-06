@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap");
 @import "tailwindcss";
 
 @layer base {
@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply bg-gray-100 text-gray-900 font-[Poppins] dark:bg-gray-950;
+    @apply bg-white md:bg-gray-100 text-gray-900 font-[Poppins];
   }
 }
 
@@ -37,15 +37,11 @@
     @apply w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500;
   }
 
-   button {
+  button {
     @apply bg-red-500 border-0 text-white p-2 rounded-md cursor-pointer;
   }
 
   div.error {
     @apply p-2 bg-red-100 rounded-md my-5;
   }
-  
-  
-  
 }
-
