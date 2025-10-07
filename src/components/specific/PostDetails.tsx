@@ -4,6 +4,7 @@ import { useDeletePost } from '../../react-query/QueriesAndMutations';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import DeleteConfirmModal from '../modals/DeleteConfirmModal';
+import ImageLightbox from '../modals/ImageLightbox';
 
 interface PostDetailsProps {
   post: Post;
@@ -14,6 +15,8 @@ const PostDetails = ({ post }: PostDetailsProps) => {
   const { mutate: deletePost, isPending } = useDeletePost();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
@@ -29,6 +32,11 @@ const PostDetails = ({ post }: PostDetailsProps) => {
 
   const handleImageError = (fileId: string) => {
     setImageErrors(prev => new Set(prev).add(fileId));
+  };
+
+  const handleImageClick = (index: number) => {
+    setLightboxIndex(index);
+    setIsLightboxOpen(true);
   };
 
   const isOwner = user?.id === post.user_id;
@@ -88,7 +96,11 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                 const imageUrl = `http://localhost:4000/api/posts/image/${image.filename}`;
                 
                 return (
-                  <div key={image.fileId || index} className="relative group overflow-hidden rounded-lg bg-gray-100">
+                  <div 
+                    key={image.fileId || index} 
+                    className="relative group overflow-hidden rounded-lg bg-gray-100 cursor-pointer"
+                    onClick={() => !imageErrors.has(image.fileId) && handleImageClick(index)}
+                  >
                     {!imageErrors.has(image.fileId) ? (
                       <>
                         <img
@@ -98,7 +110,13 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                           loading="lazy"
                           onError={() => handleImageError(image.fileId)}
                         />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <svg className="w-8 h-8 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                            </svg>
+                          </div>
+                        </div>
                       </>
                     ) : (
                       <div className="w-full h-48 flex items-center justify-center bg-gray-200">
@@ -147,6 +165,18 @@ const PostDetails = ({ post }: PostDetailsProps) => {
         message="Are you sure you want to delete this post? This action cannot be undone."
         isDeleting={isPending}
       />
+
+      {/* Image Lightbox */}
+      {post.images && post.images.length > 0 && (
+        <ImageLightbox
+          images={post.images
+            .filter(img => !imageErrors.has(img.fileId))
+            .map(img => `http://localhost:4000/api/posts/image/${img.filename}`)}
+          initialIndex={lightboxIndex}
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+        />
+      )}
     </>
   );
 };
