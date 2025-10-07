@@ -1,17 +1,6 @@
 import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
 
-interface User {
-  id: string
-  email: string
-  name: string
-  token: string
-}
-
-interface ErrorResponse {
-  error: string
-}
-
 export const useSignup = () => {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -28,21 +17,29 @@ export const useSignup = () => {
         body: JSON.stringify({ email, password })
       })
 
-      const json: User | ErrorResponse = await response.json()
+      const json = await response.json()
 
       if (!response.ok) {
-        const errorResponse = json as ErrorResponse
         setIsLoading(false)
-        setError(errorResponse.error || 'Something went wrong')
+        setError(json.message || 'Something went wrong')
         return
       }
 
-      localStorage.setItem('user', JSON.stringify(json))
+      // Backend returns { status, message, data: { user, token } }
+      const userData = {
+        id: json.data.user.id,
+        email: json.data.user.email,
+        name: json.data.user.email, // Using email as name for now
+        token: json.data.token
+      }
 
-      dispatch({ type: 'LOGIN', payload: json as User })
+      localStorage.setItem('user', JSON.stringify(userData))
+
+      dispatch({ type: 'LOGIN', payload: userData })
 
       setIsLoading(false)
     } catch (err) {
+      console.log(err);
       setIsLoading(false)
       setError('Network error')
     }

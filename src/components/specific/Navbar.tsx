@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useLogout } from "../../hooks/useLogout";
 import UserDropdown from "./UserDropdown";
+import PostFormModal from "./PostFormModal";
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -10,8 +11,11 @@ const Navbar = () => {
   const { user } = useAuthContext();
   const { logout } = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   const handleLogout = () => logout();
+  const openPostModal = () => setIsPostModalOpen(true);
+  const closePostModal = () => setIsPostModalOpen(false);
 
   return (
     <header className="w-full px-4 text-gray-700 bg-white shadow-sm">
@@ -38,18 +42,15 @@ const Navbar = () => {
                 Home
               </NavLink>
               <NavLink
-                to="/workouts"
-                className="font-medium text-gray-600 hover:text-gray-900"
-              >
-                Workout
-              </NavLink>
-              <NavLink
                 to="/about"
                 className="font-medium text-gray-600 hover:text-gray-900"
               >
                 About
               </NavLink>
-              <span className="font-medium text-gray-600 hover:text-gray-900 cursor-pointer">
+              <span 
+                onClick={openPostModal}
+                className="font-medium text-gray-600 hover:text-gray-900 cursor-pointer"
+              >
                 Create Post
               </span>
               <UserDropdown />
@@ -99,13 +100,6 @@ const Navbar = () => {
                 </NavLink>
                 <NavLink
                   className="hover:text-gray-700"
-                  to="/workouts"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Workout
-                </NavLink>
-                <NavLink
-                  className="hover:text-gray-700"
                   to="/about"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -113,7 +107,10 @@ const Navbar = () => {
                 </NavLink>
                 <span
                   className="hover:text-gray-700 cursor-pointer"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    openPostModal();
+                  }}
                 >
                   Create Post
                 </span>
@@ -140,6 +137,9 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      
+      {/* Post Form Modal */}
+      <PostFormModal isOpen={isPostModalOpen} onClose={closePostModal} />
     </header>
   );
 };

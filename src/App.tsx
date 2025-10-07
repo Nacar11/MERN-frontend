@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthContext } from './hooks/useAuthContext'
+import './App.css'
 
 // pages & components
 import HomePage from './pages/HomePage'
@@ -12,10 +13,10 @@ import SignupPage from './pages/SignupPage'
 function App() {
   const { user } = useAuthContext()
   return (
-    <div className="App">
+    <div className="min-h-screen bg-gray-50">
       <BrowserRouter>
         <Navbar />
-        <div className="pages">
+        <div className="w-full">
           <Routes>
             <Route 
               path="/"

@@ -1,47 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap");
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --primary: #1aac83;
-    --error: #e7195a;
-  }
-
-  body {
-    @apply bg-white md:bg-gray-100 text-gray-900 font-[Poppins];
-  }
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-@layer components {
-  .container {
-    @apply max-w-[1400px] mx-auto px-5;
+@layer base {
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+  
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" auto;
   }
 
-  header {
-    @apply bg-white dark:bg-gray-900 shadow;
+  html {
+    scroll-behavior: smooth;
   }
 
-  header .container {
-    @apply flex items-center justify-between py-3;
-  }
-
-  header a {
-    @apply text-gray-800 dark:text-gray-200 no-underline;
-  }
-
-  .pages {
-    @apply max-w-[1400px] mx-auto p-5;
-  }
-
-  .textfield {
-    @apply w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500;
-  }
-
-  button {
-    @apply bg-red-500 border-0 text-white p-2 rounded-md cursor-pointer;
-  }
-
-  div.error {
-    @apply p-2 bg-red-100 rounded-md my-5;
+  ::selection {
+    background-color: rgb(187 247 208);
+    color: rgb(20 83 45);
   }
 }
