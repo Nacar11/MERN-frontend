@@ -21,7 +21,7 @@ export default function LoadingModal({ open }: Props) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-            <p>Please Wait...</p>
+            Please Wait...
         </DialogContentText>
       </DialogContent>
     </Dialog>

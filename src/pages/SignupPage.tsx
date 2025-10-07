@@ -42,9 +42,9 @@ const SignupPage = () => {
 
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
-          <div className="bg-white shadow-xl rounded-2xl border border-gray-200">
+          <div className="md:bg-white md:shadow-xl md:rounded-2xl md:border md:border-gray-200">
             <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
-              <div className="flex flex-col justify-center p-8 md:p-10">
+              <div className="flex flex-col justify-center p-4 md:p-8 lg:p-10">
             <span className="mb-3 text-3xl font-bold">
               Create new Account in{" "}
               <span className="text-green-600 font-black">Social</span>

@@ -33,7 +33,9 @@ export const useLogin = () => {
         token: json.data.token
       }
 
+      // Store user data and token separately
       localStorage.setItem('user', JSON.stringify(userData))
+      localStorage.setItem('token', json.data.token)
 
       dispatch({ type: 'LOGIN', payload: userData })
 
