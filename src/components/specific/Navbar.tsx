@@ -21,12 +21,14 @@ const Navbar = () => {
     <header className="w-full px-4 text-gray-700 bg-white shadow-sm">
       <div className="flex items-center justify-between py-4 max-w-7xl mx-auto">
         {/* Logo */}
-        <NavLink to="/" className="flex items-center">
+        <NavLink to="/" className="flex items-center gap-2">
+          <img 
+            src="/assets/logo.svg" 
+            alt="Social Logo" 
+            className="h-8 w-8 md:h-10 md:w-10"
+          />
           <span className="text-green-600 text-xl font-black select-none md:text-2xl">
             Social
-          </span>
-          <span className="text-xl font-black text-gray-900 select-none md:text-2xl">
-            React
           </span>
         </NavLink>
 

@@ -9,7 +9,7 @@ const HomePage = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome to SocialReact</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome to Social</h1>
         <p className="text-gray-600">Share your thoughts with the community</p>
       </div>
 

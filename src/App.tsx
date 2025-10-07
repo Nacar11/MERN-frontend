@@ -8,6 +8,7 @@ import Navbar from './components/specific/Navbar'
 import ErrorPage from './pages/ErrorPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import AboutPage from './pages/AboutPage'
 
 
 function App() {
@@ -29,6 +30,10 @@ function App() {
             <Route 
               path="/signup" 
               element={!user ? <SignupPage/> : <Navigate to="/"/>} 
+            />
+            <Route 
+              path="/about" 
+              element={<AboutPage />} 
             />
              <Route 
               path="/*" 
