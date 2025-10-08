@@ -268,27 +268,52 @@ const PostFormModal = ({ isOpen, onClose }: PostFormModalProps) => {
 
             {/* Image Previews */}
             {imagePreviews.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={preview}
-                      alt={`Preview ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                      disabled={isPending}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </button>
-                    <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/60 text-white text-xs rounded">
-                      {(selectedImages[index].size / 1024).toFixed(0)} KB
+              <div>
+                {/* Clear All Button */}
+                <div className="flex justify-between items-center mb-3">
+                  <p className="text-sm font-medium text-gray-700">
+                    Selected Images ({imagePreviews.length})
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImages([]);
+                      setImagePreviews([]);
+                    }}
+                    className="text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-1"
+                    disabled={isPending}
+                  >
+                    <DeleteIcon fontSize="small" />
+                    Clear All
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                      />
+                      {/* Remove button - always visible on mobile, hover on desktop */}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className={`absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full transition-all duration-200 ${
+                          isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                        }`}
+                        disabled={isPending}
+                        aria-label={`Remove image ${index + 1}`}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </button>
+                      <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/60 text-white text-xs rounded">
+                        {(selectedImages[index].size / 1024).toFixed(0)} KB
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>

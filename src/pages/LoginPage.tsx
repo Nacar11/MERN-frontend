@@ -62,7 +62,6 @@ const LoginPage = () => {
                   <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">Email</label>
                   <input
                     id="email"
-                    // FIX: Use type="email" for better semantics and mobile UX
                     type="email"
                     className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Enter your email"
