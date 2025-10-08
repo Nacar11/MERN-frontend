@@ -1,10 +1,45 @@
-import { useGetAllPosts } from "../react-query/QueriesAndMutations";
+import { useGetAllPostsInfinite } from "../react-query/QueriesAndMutations";
 import PostDetails from "../components/specific/PostDetails";
 import { Post } from "../api/types";
 import Loader from "../components/shared/Loader";
+import { useEffect, useRef } from "react";
 
 const HomePage = () => {
-  const { data, isLoading, isError, error } = useGetAllPosts(1, 20);
+  const { 
+    data, 
+    isLoading, 
+    isError, 
+    error, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage 
+  } = useGetAllPostsInfinite(10);
+
+  const observerTarget = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const allPosts = data?.pages.flatMap((page) => page.data?.posts || []) || [];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -29,12 +64,25 @@ const HomePage = () => {
         </div>
       )}
 
-      {data && (
+      {!isLoading && (
         <div className="space-y-4">
-          {data.data?.posts?.length > 0 ? (
-            data.data.posts.map((post: Post) => (
-              <PostDetails post={post} key={post._id} />
-            ))
+          {allPosts.length > 0 ? (
+            <>
+              {allPosts.map((post: Post) => (
+                <PostDetails post={post} key={post._id} />
+              ))}
+              
+              {/* Intersection observer target */}
+              <div ref={observerTarget} className="h-10 flex justify-center items-center">
+                {isFetchingNextPage && <Loader />}
+              </div>
+
+              {!hasNextPage && allPosts.length > 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <p>You've reached the end! 🎉</p>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
               <p className="text-gray-500 text-lg">No posts yet. Be the first to create one!</p>

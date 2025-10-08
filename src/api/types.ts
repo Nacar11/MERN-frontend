@@ -26,3 +26,15 @@ export interface CreatePostData {
     title: string
     content: string
   }
+
+export interface PaginationMeta {
+    page: number
+    limit: number
+    total: number
+    pages: number
+  }
+
+export interface GetPostsResponse {
+    posts: Post[]
+    pagination: PaginationMeta
+  }

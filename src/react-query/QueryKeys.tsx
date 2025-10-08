@@ -10,6 +10,7 @@ export enum QUERY_KEYS {
 
     // POST KEYS
     GET_ALL_POSTS = "getAllPosts",
+    GET_ALL_POSTS_INFINITE = "getAllPostsInfinite",
     GET_USER_POSTS = "getUserPosts",
     CREATE_POST = "createPost"
   }

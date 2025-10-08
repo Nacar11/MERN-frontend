@@ -3,6 +3,9 @@ import { useCreatePost } from '../../react-query/QueriesAndMutations';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageIcon from '@mui/icons-material/Image';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+import { isMobileDevice } from '../../utils/deviceDetection';
 
 interface PostFormModalProps {
   isOpen: boolean;
@@ -16,6 +19,8 @@ const PostFormModal = ({ isOpen, onClose }: PostFormModalProps) => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = isMobileDevice();
   
   const { mutate: createPost, isPending } = useCreatePost();
 
@@ -196,8 +201,9 @@ const PostFormModal = ({ isOpen, onClose }: PostFormModalProps) => {
               Images <span className="text-gray-400 font-normal">(Optional, max 5)</span>
             </label>
             
-            {/* Upload Button */}
+            {/* Upload Buttons */}
             <div className="mb-4">
+              {/* Hidden file inputs */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -207,17 +213,56 @@ const PostFormModal = ({ isOpen, onClose }: PostFormModalProps) => {
                 className="hidden"
                 disabled={isPending || selectedImages.length >= 5}
               />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleImageSelect}
+                className="hidden"
                 disabled={isPending || selectedImages.length >= 5}
-                className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ImageIcon fontSize="small" />
-                Add Images ({selectedImages.length}/5)
-              </button>
+              />
+              
+              {/* Mobile: Show Camera and Gallery buttons */}
+              {isMobile ? (
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => cameraInputRef.current?.click()}
+                    disabled={isPending || selectedImages.length >= 5}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <CameraAltIcon fontSize="small" />
+                    Take Photo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isPending || selectedImages.length >= 5}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <PhotoLibraryIcon fontSize="small" />
+                    Gallery
+                  </button>
+                </div>
+              ) : (
+                /* Desktop: Show single upload button */
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isPending || selectedImages.length >= 5}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ImageIcon fontSize="small" />
+                  Add Images ({selectedImages.length}/5)
+                </button>
+              )}
+              
               <p className="mt-2 text-xs text-gray-500">
-                Supported: JPG, PNG, GIF, WEBP • Max 5MB per image
+                {isMobile 
+                  ? `${selectedImages.length}/5 images • Max 5MB per image`
+                  : 'Supported: JPG, PNG, GIF, WEBP • Max 5MB per image'
+                }
               </p>
             </div>
 
