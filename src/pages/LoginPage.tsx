@@ -31,8 +31,6 @@ const LoginPage = () => {
   } = form;
 
   const onSubmit = async (data: z.infer<typeof LoginPageValidation>) => {
-    // The 'rememberMe' value is now available in 'data'
-    console.log("Login Data:", data);
     await login(data.email, data.password);
   };
 
