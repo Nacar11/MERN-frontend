@@ -1,4 +1,5 @@
 import { User, CreatePostData } from './types'
+import { getApiUrl } from '../config/api'
 
 export const createPost = async (user: User | null, postData: CreatePostData, images?: File[]) => {
   try {
@@ -13,7 +14,7 @@ export const createPost = async (user: User | null, postData: CreatePostData, im
       });
     }
 
-    const response = await fetch('/api/posts', {
+    const response = await fetch(getApiUrl('api/posts'), {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${user?.token}`
@@ -36,7 +37,7 @@ export const createPost = async (user: User | null, postData: CreatePostData, im
 
 export const getAllPosts = async (user: User | null, page = 1, limit = 10) => {
   try {
-    const response = await fetch(`/api/posts/all?page=${page}&limit=${limit}`, {
+    const response = await fetch(getApiUrl(`api/posts/all?page=${page}&limit=${limit}`), {
       headers: {
         'Authorization': `Bearer ${user?.token}`
       }
@@ -56,7 +57,7 @@ export const getAllPosts = async (user: User | null, page = 1, limit = 10) => {
 
 export const deletePost = async (user: User | null, postId: string) => {
   try {
-    const response = await fetch(`/api/posts/${postId}`, {
+    const response = await fetch(getApiUrl(`api/posts/${postId}`), {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${user?.token}`

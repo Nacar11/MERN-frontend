@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import DeleteConfirmModal from '../modals/DeleteConfirmModal';
 import ImageLightbox from '../modals/ImageLightbox';
+import { getApiUrl } from '../../config/api';
 
 interface PostDetailsProps {
   post: Post;
@@ -93,7 +94,7 @@ const PostDetails = ({ post }: PostDetailsProps) => {
               'grid-cols-2 sm:grid-cols-3 md:grid-cols-3'
             }`}>
               {post.images.map((image: PostImage, index: number) => {
-                const imageUrl = `http://localhost:4000/api/posts/image/${image.filename}`;
+                const imageUrl = getApiUrl(`api/posts/image/${image.filename}`);
                 
                 return (
                   <div 
@@ -172,7 +173,7 @@ const PostDetails = ({ post }: PostDetailsProps) => {
         <ImageLightbox
           images={post.images
             .filter(img => !imageErrors.has(img.fileId))
-            .map(img => `http://localhost:4000/api/posts/image/${img.filename}`)}
+            .map(img => getApiUrl(`api/posts/image/${img.filename}`))}
           initialIndex={lightboxIndex}
           isOpen={isLightboxOpen}
           onClose={() => setIsLightboxOpen(false)}
