@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { Post, PostImage } from '../../api/types';
-import { useDeletePost } from '../../react-query/QueriesAndMutations';
+import { Link } from 'react-router-dom';
+import { Post, PostImage, PopulatedUser } from '../../api/types';
+import { useDeletePost, useBatchEngagement } from '../../react-query/QueriesAndMutations';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import DeleteConfirmModal from '../modals/DeleteConfirmModal';
 import ImageLightbox from '../modals/ImageLightbox';
+import LikeButton from './LikeButton';
+import CommentSection from './CommentSection';
 import { getApiUrl } from '../../config/api';
 
 interface PostDetailsProps {
@@ -18,6 +21,14 @@ const PostDetails = ({ post }: PostDetailsProps) => {
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // Fetch engagement data (likes/comments) for this post
+  const { data: engagementData } = useBatchEngagement([post._id]);
+  const engagement = engagementData?.data?.engagement?.[post._id] || {
+    likesCount: 0,
+    commentsCount: 0,
+    liked: false,
+  };
 
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
@@ -40,7 +51,22 @@ const PostDetails = ({ post }: PostDetailsProps) => {
     setIsLightboxOpen(true);
   };
 
-  const isOwner = user?.id === post.user_id;
+  // Type guard to check if user_id is populated
+  const isPopulatedUser = (user_id: PopulatedUser | string): user_id is PopulatedUser => {
+    return typeof user_id === 'object' && user_id !== null;
+  };
+
+  const postAuthor = isPopulatedUser(post.user_id) ? post.user_id : null;
+  const authorName = postAuthor
+    ? postAuthor.firstName && postAuthor.lastName
+      ? `${postAuthor.firstName} ${postAuthor.lastName}`
+      : postAuthor.email
+    : 'Unknown User';
+  const authorInitial = postAuthor
+    ? (postAuthor.firstName?.[0] || postAuthor.email?.[0] || 'U').toUpperCase()
+    : 'U';
+
+  const isOwner = user?.id === (typeof post.user_id === 'string' ? post.user_id : post.user_id._id);
   const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -51,29 +77,34 @@ const PostDetails = ({ post }: PostDetailsProps) => {
 
   return (
     <>
-      <article className="bg-white rounded-lg md:rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 mb-3 md:mb-4">
+      <article className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 shadow-xl mb-3 md:mb-4">
         {/* Header with Author Info */}
         <div className="flex items-center justify-between p-4 md:p-6 pb-3 md:pb-4">
           <div className="flex items-center gap-2 md:gap-3">
             {/* Author Avatar */}
-            <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-semibold text-xs md:text-sm">
-              {post.user_id?.toString().charAt(0).toUpperCase() || 'U'}
-            </div>
+            <Link to={`/profile/${postAuthor?._id}`} className="block shrink-0">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-semibold text-xs md:text-sm hover:ring-2 hover:ring-green-500/50 transition-all">
+                {authorInitial}
+              </div>
+            </Link>
             <div className="min-w-0 flex-1">
-              <p className="text-xs md:text-sm font-semibold text-gray-900 truncate">
-                {isOwner ? 'You' : `User ${post.user_id?.toString().slice(-4)}`}
-              </p>
+              <Link to={`/profile/${postAuthor?._id}`} className="group block w-fit max-w-full">
+                <p className="text-xs md:text-sm font-semibold text-white truncate group-hover:underline decoration-green-500 cursor-pointer">
+                  {isOwner ? 'You' : authorName}
+                </p>
+              </Link>
               <p className="text-[10px] md:text-xs text-gray-500 truncate">{formattedDate}</p>
             </div>
           </div>
-          
+
           {/* Actions */}
           {isOwner && (
             <button
               onClick={handleDeleteClick}
               disabled={isPending}
-              className="text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg p-1.5 md:p-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              className="text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg p-1.5 md:p-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
               title="Delete post"
+              aria-label="Delete post"
             >
               <DeleteIcon fontSize="small" />
             </button>
@@ -82,24 +113,23 @@ const PostDetails = ({ post }: PostDetailsProps) => {
 
         {/* Post Content */}
         <div className="px-4 md:px-6 pb-3 md:pb-4">
-          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3 leading-tight break-words">{post.title}</h3>
-          <p className="text-sm md:text-base text-gray-700 whitespace-pre-wrap leading-relaxed mb-3 md:mb-4 break-words">{post.content}</p>
-          
+          <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 leading-tight break-words">{post.title}</h3>
+          <p className="text-sm md:text-base text-gray-300 whitespace-pre-wrap leading-relaxed mb-3 md:mb-4 break-words">{post.content}</p>
+
           {/* Images Gallery */}
           {post.images && post.images.length > 0 && (
-            <div className={`mt-3 md:mt-4 grid gap-1.5 md:gap-2 ${
-              post.images.length === 1 ? 'grid-cols-1' : 
-              post.images.length === 2 ? 'grid-cols-2' : 
-              post.images.length === 3 ? 'grid-cols-2 sm:grid-cols-3' : 
-              'grid-cols-2 sm:grid-cols-3 md:grid-cols-3'
-            }`}>
+            <div className={`mt-3 md:mt-4 grid gap-1.5 md:gap-2 ${post.images.length === 1 ? 'grid-cols-1' :
+              post.images.length === 2 ? 'grid-cols-2' :
+                post.images.length === 3 ? 'grid-cols-2 sm:grid-cols-3' :
+                  'grid-cols-2 sm:grid-cols-3 md:grid-cols-3'
+              }`}>
               {post.images.map((image: PostImage, index: number) => {
                 const imageUrl = getApiUrl(`api/posts/image/${image.filename}`);
-                
+
                 return (
-                  <div 
-                    key={image.fileId || index} 
-                    className="relative group overflow-hidden rounded-lg bg-gray-100 cursor-pointer"
+                  <div
+                    key={image.fileId || index}
+                    className="relative group overflow-hidden rounded-lg bg-white/5 cursor-pointer"
                     onClick={() => !imageErrors.has(image.fileId) && handleImageClick(index)}
                   >
                     {!imageErrors.has(image.fileId) ? (
@@ -107,7 +137,7 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                         <img
                           src={imageUrl}
                           alt={`Post image ${index + 1}`}
-                          className="w-full h-32 sm:h-40 md:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-auto object-contain rounded-lg"
                           loading="lazy"
                           onError={() => handleImageError(image.fileId)}
                         />
@@ -120,8 +150,8 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                         </div>
                       </>
                     ) : (
-                      <div className="w-full h-32 sm:h-40 md:h-48 flex items-center justify-center bg-gray-200">
-                        <div className="text-center text-gray-500">
+                      <div className="w-full h-32 sm:h-40 md:h-48 flex items-center justify-center bg-white/5">
+                        <div className="text-center text-gray-600">
                           <svg className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-1 md:mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
@@ -136,8 +166,23 @@ const PostDetails = ({ post }: PostDetailsProps) => {
           )}
         </div>
 
-        {/* Footer */}
-        <div className="px-4 md:px-6 py-2 md:py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+        {/* Engagement Bar: Likes + Comments */}
+        <div className="px-4 md:px-6 py-3 border-t border-white/10">
+          <div className="flex items-center gap-5">
+            <LikeButton
+              postId={post._id}
+              liked={engagement.liked}
+              likesCount={engagement.likesCount}
+            />
+            <CommentSection
+              postId={post._id}
+              commentsCount={engagement.commentsCount}
+            />
+          </div>
+        </div>
+
+        {/* Footer: Timestamp */}
+        <div className="px-4 md:px-6 py-2 md:py-3 bg-white/[0.02] border-t border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm text-gray-500">
             <span className="flex items-center gap-0.5 md:gap-1">
               <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +201,7 @@ const PostDetails = ({ post }: PostDetailsProps) => {
             )}
           </div>
         </div>
-    </article>
+      </article>
 
       {/* Delete Confirmation Modal */}
       <DeleteConfirmModal
