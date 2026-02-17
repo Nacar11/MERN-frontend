@@ -20,7 +20,7 @@
   }
 
   ::selection {
-    background-color: rgb(187 247 208);
-    color: rgb(20 83 45);
+    background-color: rgba(0, 255, 102, 0.3);
+    color: rgb(255 255 255);
   }
 }

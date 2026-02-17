@@ -7,7 +7,12 @@ export const useSignup = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { dispatch } = useAuthContext()
 
-  const signup = async (email: string, password: string): Promise<void> => {
+  const signup = async (
+    email: string,
+    password: string,
+    firstName?: string,
+    lastName?: string
+  ): Promise<void> => {
     setIsLoading(true)
     setError(null)
 
@@ -15,7 +20,8 @@ export const useSignup = () => {
       const response = await fetch(getApiUrl('api/user/signup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        credentials: 'include',
+        body: JSON.stringify({ email, password, firstName, lastName })
       })
 
       const json = await response.json()
@@ -30,19 +36,26 @@ export const useSignup = () => {
       const userData = {
         id: json.data.user.id,
         email: json.data.user.email,
-        name: json.data.user.email, // Using email as name for now
+        name: json.data.user.firstName
+          ? `${json.data.user.firstName}${json.data.user.lastName ? ' ' + json.data.user.lastName : ''}`
+          : json.data.user.email,
+        firstName: json.data.user.firstName || null,
+        lastName: json.data.user.lastName || null,
         token: json.data.token
       }
 
-      // Store user data and token separately
+      // Store user data and token
       localStorage.setItem('user', JSON.stringify(userData))
       localStorage.setItem('token', json.data.token)
+
+      // Flag for welcome flow (consumed by WelcomePage, then removed)
+      localStorage.setItem('isNewUser', 'true')
 
       dispatch({ type: 'LOGIN', payload: userData })
 
       setIsLoading(false)
     } catch (err) {
-      console.log(err);
+      if (import.meta.env.DEV) console.log(err);
       setIsLoading(false)
       setError('Network error')
     }

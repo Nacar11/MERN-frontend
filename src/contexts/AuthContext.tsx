@@ -6,7 +6,7 @@ interface AuthState {
   user: User | null
 }
 
-type AuthAction = 
+type AuthAction =
   | { type: 'LOGIN'; payload: User }
   | { type: 'LOGOUT' }
 
@@ -16,7 +16,7 @@ interface AuthContextType extends AuthState {
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  dispatch: () => {}, 
+  dispatch: () => { },
 })
 
 export const authReducer = (state: AuthState, action: AuthAction): AuthState => {
@@ -69,7 +69,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       }
     }
   }, [])
-  console.log('AuthContext state:', state)
+  if (import.meta.env.DEV) console.log('AuthContext state:', state)
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>

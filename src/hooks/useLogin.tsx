@@ -15,6 +15,7 @@ export const useLogin = () => {
       const response = await fetch(getApiUrl('api/user/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password })
       })
 
@@ -42,7 +43,7 @@ export const useLogin = () => {
 
       setIsLoading(false)
     } catch (err) {
-      console.log(err);
+      if (import.meta.env.DEV) console.log(err);
       setIsLoading(false)
       setError('Network error')
     }
